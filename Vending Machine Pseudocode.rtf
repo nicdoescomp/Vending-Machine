@@ -1,0 +1,79 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2821
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 LucidaGrande;}
+{\colortbl;\red255\green255\blue255;\red251\green0\blue7;\red0\green0\blue0;\red251\green0\blue7;
+\red0\green0\blue0;}
+{\*\expandedcolortbl;;\cssrgb\c100000\c12195\c0;\cssrgb\c0\c1\c1;\cssrgb\c100000\c12195\c0;
+\cssrgb\c0\c0\c0;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 CLASS \cf2 MyClass\cf0 :\
+    METHOD \cf2 getChoice\cf0 (\cf2 drink\cf0 [], \cf2 size\cf0 , \cf2 machineNum\cf0 [])\
+        DISPLAY "Please pick a drink: "\
+        READ \cf2 choice\cf0 \
+        DISPLAY "You picked: ", \cf2 choice\cf0 \
+\
+        FOR i FROM 0 TO \cf2 size\cf0  - 1:\
+            IF \cf2 drink\cf0 [\cf2 i\cf0 ] == \cf2 choice\cf0 :\
+                IF \cf2 machineNum\cf0 [\cf2 i\cf0 ] <= 0:\
+                    DISPLAY "Sorry!! There is no more."\
+                    \cf2 machineNum\cf0 [\cf2 i\cf0 ] = 0\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf2                     \cf3 CALL\cf2  getChoice\cf0 (\cf2 drink\cf0 , \cf2 size\cf0 , \cf2 machineNum\cf0 ) \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 		\
+                RETURN \cf2 i\cf0   // Return the index of the chosen drink\
+        \
+        DISPLAY "Invalid choice! Please try again."\
+        RETURN \cf2 getChoice\cf0 (\cf2 drink\cf0 , \cf2 size\cf0 , \cf2 machineNum\cf0 )  // Recursive call for valid input\
+\
+    METHOD \cf2 transaction\cf0 (\cf2 drink\cf0 [], \cf2 size\cf0 , \cf2 machineNum\cf0 [], \cf2 money\cf0 , \cf2 prices\cf0 [])\
+        DISPLAY table header for drinks, cost, and available stock\
+\
+        FOR i FROM 0 TO \cf2 size\cf0  - 1:\
+            DISPLAY \cf2 drink\cf0 [\cf2 i\cf0 ] , \cf2 prices\cf0 [\cf2 i\cf0 ] , \cf2 machineNum\cf0 [\cf2 I\cf0 ] , formatted properly\
+\
+        CALL getChoice(\cf2 drink\cf0 , \cf2 size\cf0 , \cf2 machineNum\cf0 ) 
+\f1 \uc0\u8594 
+\f0  \cf2 selection\cf0 \
+        CALL currency(\cf2 drink\cf0 , \cf2 prices\cf0 , \cf2 money\cf0 , \cf2 size\cf0 , \cf2 selection\cf0 )\
+\
+        FOR i FROM 0 TO \cf2 size\cf0  - 1:\
+            IF \cf2 drink\cf0 [\cf2 selection\cf0 ] == \cf2 drink\cf0 [\cf2 i\cf0 ] AND \cf2 money\cf0  <= 1.0:\
+                \cf2 machineNum\cf0 [\cf2 i\cf0 ] -= 1  // Reduce stock after a valid purchase\
+\
+            IF \cf2 machineNum\cf0 [\cf2 i\cf0 ] == 0 AND \cf2 drink\cf0 [\cf2 selection\cf0 ] == \cf2 drink\cf0 [\cf2 i\cf0 ]:\
+                DISPLAY "Uh oh.. that's the last one-"\
+\
+        DISPLAY "Want another? Y or N: "\
+        READ \cf2 answer\cf0 \
+        CONVERT \cf2 answer\cf0  to uppercase\
+\
+        IF \cf2 answer\cf0  == 'Y':\
+            CALL \cf2 transaction\cf0 (\cf2 drink\cf0 , \cf2 size\cf0 , \cf2 machineNum\cf0 , \cf2 money\cf0 , \cf2 prices\cf0 )\
+        ELSE:\
+            DISPLAY "Thank you!!"\
+\
+    METHOD \cf2 currency\cf0 (\cf2 drink\cf0 [], \cf2 prices\cf0 [], \cf2 money\cf0 , \cf2 size\cf0 , \cf2 selection\cf0 )\
+        DISPLAY "Please enter the money amount: $"\
+        READ \cf2 money\cf0 \
+\
+        IF \cf2 money\cf0  >= \cf2 prices\cf0 [\cf2 selection\cf0 ] AND \cf2 money\cf0  <= 1.00:  // Ensure valid payment\
+            \cf2 money\cf0  -= \cf2 prices\cf0 [\cf2 selection\cf0 ]\
+            DISPLAY "Here is your change: $", \cf2 money\cf0 \
+        ELSE IF \cf4 money\cf0  > 1:\
+            DISPLAY "Sorry, that\'92s a really high bill!\'94\
+\
+MAIN FUNCTION:\
+    CREATE OBJECT \cf2 vendingMachine\cf0  OF CLASS \cf2 MyClass\cf0 \
+\
+    INITIALIZE \cf2 drink\cf0 [] = ["Cola", "Root Beer", "Lemon-Lime", "Grape Soda", "Cream Soda"]\
+    INITIALIZE \cf2 prices\cf0 [] = [0.75, 0.75, 0.75, 0.80, 0.80]\
+    INITIALIZE \cf2 machineNum\cf0 [] = [20, 20, 20, 20, 20]\
+    INITIALIZE \cf2 money\cf0  = 0.0\
+    INITIALIZE \cf2 size\cf0  = length of drink array\
+\
+    CALL \cf2 vendingMachine\cf5 .\cf2 transaction\cf0 (\cf2 drink\cf0 , \cf2 size\cf0 , \cf2 machineNum\cf0 , \cf2 money\cf0 , \cf2 prices\cf0 )\
+\
+    RETURN 0\
+}
